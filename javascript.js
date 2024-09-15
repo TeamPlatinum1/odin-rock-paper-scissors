@@ -1,7 +1,3 @@
-
-let humanScore = 0;
-let computerScore = 0;
-
 function getRandomInt(end){
     return Math.floor(Math.random()*end);
 }
@@ -75,10 +71,38 @@ function playRound(humanChoice, computerChoice){
         console.log(`${userWinString}! Both chose ${humanChoice}!`);
     }else if(userWinString === "You win"){
         console.log(`${userWinString}! ${humanChoice} beats ${computerChoice}!`);
+        humanScore++;
     }else{
         console.log(`${userWinString}! ${computerChoice} beats ${humanChoice}!`);
+        computerScore++;
     }
 
 }
 
-playRound(getHumanChoice(), getComputerChoice());
+function printScoreboard(){
+    console.log("Your score: " + humanScore);
+    console.log("Computer score: " + computerScore);
+}
+
+function playGame(rounds){
+
+    console.log("Let's play Rock-Paper Scissors for " + rounds + " rounds!")
+
+    for(let i = 1; i < rounds+1; i++){
+        console.log(`Round ${i}! Play`);
+        playRound(getHumanChoice(), getComputerChoice());
+        console.group("Scoreboard:");
+        printScoreboard();
+        console.groupEnd();
+    }
+
+    console.log("End of game!");
+    console.log("After " + rounds + " rounds this is the scoreboard: ");
+    printScoreboard();
+    console.log(humanScore === computerScore ? "Draw! Try again (reload)," :
+                humanScore < computerScore ? "You lost! Try again (reload)." : "You win! Play again (reload).");
+}
+
+let humanScore = 0;
+let computerScore = 0;
+playGame(5);
