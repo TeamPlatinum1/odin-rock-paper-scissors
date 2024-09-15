@@ -55,3 +55,30 @@ function getHumanChoice(){
 
     return userInput;
 }
+
+function checkForUserWin(humanChoice, computerChoice){
+    if(humanChoice === computerChoice){
+        return "Draw";
+    }else if((humanChoice === "Rock" && computerChoice === "Scissors") ||
+             (humanChoice === "Paper" && computerChoice === "Rock") ||
+             (humanChoice === "Scissors" && computerChoice === "Paper")){
+        return "You win";
+    }
+    return "You lose";
+}
+
+function playRound(humanChoice, computerChoice){
+
+    let userWinString = checkForUserWin(humanChoice, computerChoice);
+
+    if(userWinString === "Draw"){
+        console.log(`${userWinString}! Both chose ${humanChoice}!`);
+    }else if(userWinString === "You win"){
+        console.log(`${userWinString}! ${humanChoice} beats ${computerChoice}!`);
+    }else{
+        console.log(`${userWinString}! ${computerChoice} beats ${humanChoice}!`);
+    }
+
+}
+
+playRound(getHumanChoice(), getComputerChoice());
