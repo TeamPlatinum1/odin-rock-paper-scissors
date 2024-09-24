@@ -83,6 +83,10 @@ body {
     border-color: red;
 }
 
+.computer-content .end-choice {
+    color: transparent;
+}
+
 .player-content .choices ul li:hover {
     background-color: #0378A6;
     border: 3px solid #034a77;

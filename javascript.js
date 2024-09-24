@@ -1,20 +1,61 @@
+const playerChoices = document.querySelectorAll(".player-content > .choices > ul > li");
+const computerChoices = document.querySelectorAll(".computer-content > .choices > ul > li");
+const computerEndChoice = document.querySelector(".computer-content > .end-choice");
+const computerScoreElement = document.querySelector(".computer-content > .info > .score");
+const playerEndChoice = document.querySelector(".player-content > .end-choice");
+const playerScoreElement = document.querySelector(".player-content > .info > .score");
+const playButton = document.querySelector("#play");
+const roundTracker = document.querySelector(".round");
+
+let currentRound = 1;
+let humanScore = 0;
+let computerScore = 0;
+let winScore = 5;
+
+const possibleChoices = {
+    Rock: "✊",
+    Paper: "✋",
+    Scissors: "✌"
+}
+
+const possibleOutcomes = {
+    PlayerWin: [1, 0],
+    PlayerLose: [0, 1],
+    Draw: [0, 0]
+}
+
+playerChoices.forEach(choice => {
+    choice.addEventListener("click", (event) => {
+        playerEndChoice.textContent = event.target.textContent;
+    });
+});
+
+playButton.addEventListener("click", (event) => {
+    playRound();
+});
+
+function setComputerChoice(computerChoice){
+    computerEndChoice.textContent = computerChoice;
+    computerEndChoice.style.color = "white";
+}
+
 function getRandomInt(end){
     return Math.floor(Math.random()*end);
 }
 
-function getComputerChoice(){
+function generateComputerChoice(){
 // Get a random number between 0 and 3 (exclusivly)
     let computerChoice = getRandomInt(3);
 // Map it to the availabe choices
     switch(computerChoice){
         case 0:
-            computerChoice = "Rock";
+            computerChoice = possibleChoices.Rock;
             break;
         case 1:
-            computerChoice = "Paper";
+            computerChoice = possibleChoices.Paper;
             break;
         case 2:
-            computerChoice = "Scissors";
+            computerChoice = possibleChoices.Scissors;
             break;
         default:
             console.error("Invalid Random number!");
@@ -22,86 +63,56 @@ function getComputerChoice(){
     return computerChoice;
 }
 
-function userInputIsValid(userInput){
-    try{
-        userInput = userInput.toLowerCase();
-        if(userInput === "rock" || userInput === "paper" || userInput === "scissors"){
-            return true;
-        }
-    } catch(error){
-        console.log("An Error Occured!");
-    }
-    console.log("Invalid Input");
-    return false;
-}
-
-function formatUserChoice(userInput){
-    userInput = userInput.toLowerCase();
-    userInput = userInput.slice(0, 1).toUpperCase() + userInput.slice(1);
-    return userInput;
-}
-
 function getHumanChoice(){
-    let userInput;
-    do{
-        userInput = prompt("Your Choice!");
-    } while(!userInputIsValid(userInput));
-
-    userInput = formatUserChoice(userInput);
-
-    return userInput;
+    return playerEndChoice.textContent;
 }
 
 function checkForUserWin(humanChoice, computerChoice){
     if(humanChoice === computerChoice){
-        return "Draw";
-    }else if((humanChoice === "Rock" && computerChoice === "Scissors") ||
-             (humanChoice === "Paper" && computerChoice === "Rock") ||
-             (humanChoice === "Scissors" && computerChoice === "Paper")){
-        return "You win";
+        return possibleOutcomes.Draw;
+    }else if((humanChoice === possibleChoices.Rock && computerChoice === possibleChoices.Scissors) ||
+             (humanChoice === possibleChoices.Paper && computerChoice === possibleChoices.Rock) ||
+             (humanChoice === possibleChoices.Scissors && computerChoice === possibleChoices.Paper)){
+        return possibleOutcomes.PlayerWin;
     }
-    return "You lose";
+    return possibleOutcomes.PlayerLose;
 }
 
-function playRound(humanChoice, computerChoice){
+function playRound(){
+    let computerChoice = generateComputerChoice();
+    setComputerChoice(computerChoice);
+    let outcome = checkForUserWin(getHumanChoice(), computerChoice);
+    updateScore(outcome);
+    updateScoreBoard();
+    currentRound++;
+    updateRoundTracker();
+    checkForEndOfGame();
+}
 
-    let userWinString = checkForUserWin(humanChoice, computerChoice);
-
-    if(userWinString === "Draw"){
-        console.log(`${userWinString}! Both chose ${humanChoice}!`);
-    }else if(userWinString === "You win"){
-        console.log(`${userWinString}! ${humanChoice} beats ${computerChoice}!`);
-        humanScore++;
-    }else{
-        console.log(`${userWinString}! ${computerChoice} beats ${humanChoice}!`);
-        computerScore++;
+function checkForEndOfGame(){
+    if(humanScore >= winScore || computerScore >= winScore) {
+        setTimeout(function () {
+            alert(humanScore >= winScore ? "You won! Let's play again!" : "You lost! Don't give up, try again!");
+            currentRound = 1;
+            humanScore = 0;
+            computerScore = 0;
+            updateScoreBoard();
+            updateRoundTracker();
+            computerEndChoice.style.color = "transparent";
+        }, 1);
     }
-
 }
 
-function printScoreboard(){
-    console.log("Your score: " + humanScore);
-    console.log("Computer score: " + computerScore);
+function updateScore(outcome){
+    humanScore += outcome[0];
+    computerScore += outcome[1];
 }
 
-function playGame(rounds){
-
-    console.log("Let's play Rock-Paper Scissors for " + rounds + " rounds!")
-
-    for(let i = 1; i < rounds+1; i++){
-        console.log(`Round ${i}! Play`);
-        playRound(getHumanChoice(), getComputerChoice());
-        console.group("Scoreboard:");
-        printScoreboard();
-        console.groupEnd();
-    }
-
-    console.log("End of game!");
-    console.log("After " + rounds + " rounds this is the scoreboard: ");
-    printScoreboard();
-    console.log(humanScore === computerScore ? "Draw! Try again (reload)," :
-                humanScore < computerScore ? "You lost! Try again (reload)." : "You win! Play again (reload).");
+function updateScoreBoard(){
+    playerScoreElement.textContent = humanScore;
+    computerScoreElement.textContent = computerScore;
 }
 
-let humanScore = 0;
-let computerScore = 0;
+function updateRoundTracker(){
+    roundTracker.textContent = "Round " + currentRound;
+}
