@@ -6,14 +6,87 @@ body {
     margin: 0;
 }
 
+#play {
+    display: block;
+    margin: 0 auto;
+    font-size: 32px;
+    color: #F4F1EC;
+    background-color: #0378A6;
+    padding: 8px 32px;
+    border: 3px solid #0378A6;
+    border-radius: 10px;
+}
+
+#play:hover {
+    cursor: pointer;
+    background-color: #F4F1EC;
+    color: #0378A6;
+}
+
 .game-body {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 16px;
+}
+
+.vs-sign {
+    align-self: center;
+    font-size: 32px;
+    font-weight: bold;
 }
 
 .game-body .player-content,
 .game-body .computer-content {
-    flex-grow: 1;
+    flex: 1 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.choices ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.name-tag {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.score {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.choices ul li,
+.end-choice {
+    font-size: 48px;
+    border: 3px solid #03588C;
+    border-radius: 10px;
+    padding: 8px;
+}
+
+.end-choice {
+    border-color: red;
+}
+
+.player-content .choices ul li:hover {
+    background-color: #0378A6;
+    border: 3px solid #034a77;
+    cursor: pointer;
 }
 
 .meta-data {
